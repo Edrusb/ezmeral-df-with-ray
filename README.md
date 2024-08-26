@@ -48,17 +48,17 @@ This will output something like the below output where you will be given the IP 
     Next steps
       To add another node to this Ray cluster, run
         ray start --address='10.13.25.131:6379'
-    
+
       To connect to this Ray cluster:
         import ray
         ray.init()
-    
+
       To submit a Ray job using the Ray Jobs CLI:
         RAY_ADDRESS='http://10.13.25.131:8265' ray job submit --working-dir . -- python my_script.py
-    
+
       See https://docs.ray.io/en/latest/cluster/running-applications/job-submission/index.html
       for more information on submitting Ray jobs to the Ray cluster.
-    
+
       To terminate the Ray runtime, run ray stop
 
       To view the status of the cluster, use ray status
@@ -69,7 +69,7 @@ This will output something like the below output where you will be given the IP 
 
 You should now be able already to connect to the dashboard as described above, in particular, looking at the “cluster” tab you will see only one node for now (the head node):
 
-![Dashboard view of the head node alone]()
+![Dashboard view of the head node alone](Snapshots/Image1.jpg)
 
 ### Start all other nodes
 
@@ -80,16 +80,16 @@ On all other nodes run the following command using the IP address of the head no
 Of course better using clustershell to simplify the deployment on many nodes in a single command:
 
     clush -b -w df-[2-5] ./go-ray.sh /opt/RAY worker 10.13.25.131
-    
+
 After a few seconds, the “cluster” tab of the dashboard should display all the nodes involved in the cluster (including the head node):
 
-![Dashboard view of the node with all workers]()
+![Dashboard view of the node with all workers](Snapshots/Image2.jpg)
 
 ## Submitting a job
 
-To submit a job, we must first activate the python virtual environment (venv) where the _ray-install.py_ script installed Ray 
+To submit a job, we must first activate the python virtual environment (venv) where the _ray-install.py_ script installed Ray
 (this is the path /opt/RAY in we were using above to illustrate the installation script).
-On a node where Ray has been installed (we can also install ray in node that will not be part of the cluster, 
+On a node where Ray has been installed (we can also install ray in node that will not be part of the cluster,
 still using _ray-install.py_), open a shell session and type the following:
 
 > root@df-1:\~# source /opt/RAY/bin/activate<br>
@@ -99,7 +99,7 @@ As you see, the prompt has changed reporting now you are under the (RAY) venv. S
 
     RAY_ADDRESS='http://10.13.25.131:8265' ray job submit --working-dir . -- python my_script.py
 
-For example, you can use the __prime.py__ script which list the prime number below a given max number. First create a new 
+For example, you can use the __prime.py__ script which list the prime number below a given max number. First create a new
 directory for a working directory on a node of the cluster and copy the __prime.py__ script in there:
 
     root@df-1:~# source /opt/RAY/bin/activate
@@ -140,7 +140,7 @@ Then submit the job to the ray cluster:
 
 ***Note***: This script is just for illustration purposes, it is not efficient to spawn so many small tasks.
 
-    
+
 
 
 
