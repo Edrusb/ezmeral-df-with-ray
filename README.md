@@ -99,7 +99,7 @@ As you see, the prompt has changed reporting now you are under the (RAY) venv. S
 
     RAY_ADDRESS='http://10.13.25.131:8265' ray job submit --working-dir . -- python my_script.py
 
-For example, you can use the __prime.py__ script which list the prime number below a given max number. First create a new
+For example, you can use the [__prime.py__](Examples/prime.py) script which list the prime number below a given max number. First create a new
 directory for a working directory on a node of the cluster and copy the __prime.py__ script in there:
 
     root@df-1:~# source /opt/RAY/bin/activate
