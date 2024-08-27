@@ -87,6 +87,8 @@ After a few seconds, the “cluster” tab of the dashboard should display all t
 
 ## Submitting a job
 
+### Example 1
+
 To submit a job, we must first activate the python virtual environment (venv) where the _ray-install.py_ script installed Ray
 (this is the path /opt/RAY in we were using above to illustrate the installation script).
 On a node where Ray has been installed (we can also install ray in node that will not be part of the cluster,
@@ -110,7 +112,7 @@ directory for a working directory on a node of the cluster and copy the __prime.
 
 Then submit the job to the ray cluster:
 
-> (RAY) root@df-1:\~/Working# ray  job submit --working-dir . -- python3 prime.py 100<br>
+> (RAY) root@df-1:\~/Working# **ray  job submit --working-dir . -- python3 prime.py 100**<br>
 > Job submission server address: http://10.13.25.131:8265<br>
 > 2024-08-26 15:57:30,554 INFO dashboard_sdk.py:385 -- Package gcs://_ray_pkg_0ce46dc9bac19eb0.zip already exists, skipping upload.<br>
 > <br>
@@ -140,7 +142,25 @@ Then submit the job to the ray cluster:
 
 ***Note***: This script is just for illustration purposes, it is not efficient to spawn so many small tasks.
 
+### Example 2: LLM
 
+The [__translate.py__](Examples/translate.py) put a pre-trained model in inference using **Ray Serve** and let you interact with it to translate English sentences to French. These models requires the "transformers" and "torch" modules that are not installed by default on the nodes of the cluster. We will rely in the realtime environmenent to perform this operartion on fly and only for the time the model is in inference:
+
+Again copy the __translate.py__ into an empty directory and change your current directory there. Then run:
+
+    ray job submit --working-dir . --runtime-env-json={"pip": [ "torch", "transformers" ] } -- python3 translate.py launch 5
+
+This will launch **Ray Serve** and "application" with 5 instances to address requests behind port 8000 of the head node. 
+
+_**Note:** this command may take some time as it will load the **torch** and **transformers** modules in all nodes of the Ray cluster, then it will load the modele five times for it be ready to make predictions. To avoid downloading/installing those modules each time one could install them manually in the venv where Ray has been installed on **all** nodes of the Ray cluster._
+
+You can check the Ray dashboard both the "jobs" and "serve" tabs to see the evolution of the status of the deployment process.
+
+[ image of dashboard with serve tab]
+
+Once the script has completed and the model is ready for the inference, you can ask for translation using the following command:
+
+    python3 predict.py "This is a sentence in English"
 
 
 
