@@ -154,10 +154,9 @@ as we did in the previous example, though the __translate.py__ script requiring 
 
 To avoid this drawback a better approach is to load these two libraries on each of the Ray node, in the venv we created:
 
-    root@df-1:~# source /opt/RAY/bin/activate
-    (RAY) root@df-1:~# root@df-1:~# python3 -m pip install torch transformers
+    clush -b -w df-[1-5] "source /opt/RAY/bin/activate ; python3 -m pip install torch transformers"
 
-then we can submit the job as previously done:
+then we can submit the job on the head node (df-1) as previously done:
     root@df-1:~# cd Working
     (RAY) root@df-1:\~/Working# cp ....../translate.py .
     (RAY) root@df-1:\~/Working# export RAY_ADDRESS='http://10.13.25.131:8265'
