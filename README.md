@@ -105,14 +105,15 @@ For example, you can use the [__prime.py__](Examples/prime.py) script which list
 directory for a working directory on a node of the cluster and copy the __prime.py__ script in there:
 
     root@df-1:~# source /opt/RAY/bin/activate
-    root@df-1:~# mkdir Working
-    root@df-1:~# cd Working
-    root@df-1:~# cp ....../prime.py .
-    root@df-1:~# export RAY_ADDRESS='http://10.13.25.131:8265'
+    (RAY) root@df-1:~# mkdir Working
+    (RAY) root@df-1:~# cd Working
+    (RAY) root@df-1:~# cp ....../prime.py .
+    (RAY) root@df-1:~# export RAY_ADDRESS='http://10.13.25.131:8265'
 
 Then submit the job to the ray cluster:
 
-> (RAY) root@df-1:\~/Working# **ray  job submit --working-dir . -- python3 prime.py 100**<br>
+    (RAY) root@df-1:\~/Working# ray  job submit --working-dir . -- python3 prime.py 100
+    
 > Job submission server address: http://10.13.25.131:8265<br>
 > 2024-08-26 15:57:30,554 INFO dashboard_sdk.py:385 -- Package gcs://_ray_pkg_0ce46dc9bac19eb0.zip already exists, skipping upload.<br>
 > <br>
@@ -146,9 +147,21 @@ Then submit the job to the ray cluster:
 
 The [__translate.py__](Examples/translate.py) put a pre-trained model in inference using **Ray Serve** and let you interact with it to translate English sentences to French. These models requires the "transformers" and "torch" modules that are not installed by default on the nodes of the cluster. We will rely in the realtime environmenent to perform this operartion on fly and only for the time the model is in inference:
 
-Again copy the __translate.py__ into an empty directory and change your current directory there. Then run:
+Again copy the __translate.py__ into an empty directory and change your current directory there. A first approach would be to submit a job
+as we did in the previous example, though the __translate.py__ script requiring __torch__ and __transformers__ modules, it would be necessary to use the Ray runtime_environment feature as described below, but that would be painful as it would require to load those big library at each script run:
 
-    ray job submit --working-dir . --runtime-env-json={"pip": [ "torch", "transformers" ] } -- python3 translate.py launch 5
+    (RAY) root@df-1:~# ray job submit --working-dir . --runtime-env-json={"pip": [ "torch", "transformers" ] } -- python3 translate.py launch 5
+
+To avoid this drawback a better approach is to load these two libraries on each of the Ray node, in the venv we created:
+
+    root@df-1:~# source /opt/RAY/bin/activate
+    (RAY) root@df-1:~# root@df-1:~# python3 -m pip install torch transformers
+
+then we can submit the job as previously done:
+    root@df-1:~# cd Working
+    (RAY) root@df-1:\~/Working# cp ....../translate.py .
+    (RAY) root@df-1:\~/Working# export RAY_ADDRESS='http://10.13.25.131:8265'
+    (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py launch 5
 
 This will launch **Ray Serve** and "application" with 5 instances to address requests behind port 8000 of the head node. 
 
