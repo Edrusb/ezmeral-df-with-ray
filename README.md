@@ -165,7 +165,7 @@ then we can submit the job on the head node (df-1) as previously done:
 
 This will launch **Ray Serve** and "application" with 5 instances to address requests behind port 8000 of the head node. 
 
-_**Note:** this command may take some time as it will load the **torch** and **transformers** modules in all nodes of the Ray cluster, then it will load the modele five times for it be ready to make predictions. To avoid downloading/installing those modules each time one could install them manually in the venv where Ray has been installed on **all** nodes of the Ray cluster._
+![Dashboard view with Ray Serve in action](Snapshots/Image3.jpg)
 
 You can check the Ray dashboard both the "jobs" and "serve" tabs to see the evolution of the status of the deployment process.
 
