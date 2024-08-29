@@ -176,8 +176,6 @@ This will launch **Ray Serve** and "application" with 5 instances to address req
 
 You can check the Ray dashboard both the "jobs" and "serve" tabs to see the evolution of the status of the deployment process.
 
-![image of the dashboard with serve tab](Snapshots/Image4.jpg)
-
 Once the script has completed and the model is deployed successfully, you can ask for translation using the following command:
 
     (RAY) root@df-1:~/Working# ./translate.py ask df-1 "Success is the ability to go from one failure to another with no loss of enthusiasm."
