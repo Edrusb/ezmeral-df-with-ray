@@ -166,17 +166,17 @@ Here we will instead install once and for all those two modules in each Ray venv
 then we can submit the job on the head node (df-1) as previously done:
 
     root@df-1:~# cd Working
-    (RAY) root@df-1:\~/Working# cp ....../translate.py .
+    (RAY) root@df-1:\~/Working# wget https://github.com/Edrusb/ezmeral-df-with-ray/blob/main/Examples//translate.py
     (RAY) root@df-1:\~/Working# export RAY_ADDRESS='http://10.13.25.131:8265'
     (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py launch job 5
 
-This will launch **Ray Serve** and "application" with 5 instances to address requests behind port 8000 of the head node. 
+This will launch **Ray Serve** and "application" with 5 instances to address requests of translation. 
 
 ![Dashboard view with Ray Serve in action](Snapshots/Image3.jpg)
 
 You can check the Ray dashboard both the "jobs" and "serve" tabs to see the evolution of the status of the deployment process.
 
-[ image of dashboard with serve tab]
+![image of the dashboard with serve tab](Snapshots/Image4.jpg)
 
 Once the script has completed and the model is deployed successfully, you can ask for translation using the following command:
 
