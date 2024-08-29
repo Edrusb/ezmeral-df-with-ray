@@ -77,11 +77,11 @@ You should now be able already to connect to the dashboard as described above, i
 
 On all other nodes run the following command using the IP address (or FQDN) of the head node reported previously:
 
-    ./go-ray.sh /opt/RAY worker 10.13.25.131
+    ./go-ray.sh /opt/RAY worker df-1
 
-Of course better using clustershell to simplify the deployment on many nodes in a single command:
+Of course better using clustershell to simplify the deployment on many nodes (df-2 to df-5) in a single command:
 
-    clush -b -w df-[2-5] ./go-ray.sh /opt/RAY worker 10.13.25.131
+    clush -b -w df-[2-5] ./go-ray.sh /opt/RAY worker df-1
 
 After a few seconds, the “cluster” tab of the dashboard should display all the nodes involved in the cluster (including the head node):
 
@@ -100,7 +100,7 @@ On a node where Ray has been installed (we can also install ray using _ray-insta
 
 As you see, the prompt has changed reporting now you are under the (RAY) venv. Submitting a job is done the following way (which is also provided in the output shown above while starting the head node):
 
-    RAY_ADDRESS='http://10.13.25.131:8265' ray job submit --working-dir . -- python my_script.py
+    RAY_ADDRESS='http://df-1:8265' ray job submit --working-dir . -- python my_script.py
 
 For example, you can use the [__prime.py__](Examples/prime.py) script which list the prime number below a given max number. First create a new
 directory for a working directory on a node of the cluster and copy the __prime.py__ script in there:
@@ -109,13 +109,13 @@ directory for a working directory on a node of the cluster and copy the __prime.
     (RAY) root@df-1:~# mkdir Working
     (RAY) root@df-1:~# cd Working
     (RAY) root@df-1:~# wget https://github.com/Edrusb/ezmeral-df-with-ray/blob/main/Examples/prime.py
-    (RAY) root@df-1:~# export RAY_ADDRESS='http://10.13.25.131:8265'
+    (RAY) root@df-1:~# export RAY_ADDRESS='http://df-1:8265'
 
 Then submit the job to the ray cluster:
 
     (RAY) root@df-1:\~/Working# ray  job submit --working-dir . -- python3 prime.py 100
     
-> Job submission server address: http://10.13.25.131:8265<br>
+> Job submission server address: http://df-1:8265<br>
 > 2024-08-26 15:57:30,554 INFO dashboard_sdk.py:385 -- Package gcs://_ray_pkg_0ce46dc9bac19eb0.zip already exists, skipping upload.<br>
 > <br>
 > -------------------------------------------------------<br>
@@ -167,7 +167,7 @@ then we can submit the job on the head node (df-1) as previously done:
 
     root@df-1:~# cd Working
     (RAY) root@df-1:\~/Working# wget https://github.com/Edrusb/ezmeral-df-with-ray/blob/main/Examples//translate.py
-    (RAY) root@df-1:\~/Working# export RAY_ADDRESS='http://10.13.25.131:8265'
+    (RAY) root@df-1:\~/Working# export RAY_ADDRESS='http://df-1:8265'
     (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py launch job 5
 
 This will launch **Ray Serve** and "application" with 5 instances to address requests of translation. 
