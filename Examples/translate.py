@@ -11,13 +11,13 @@ def usage(argv0):
     print("usage: {} ask    <ray head IP> <message>".format(argv0))
     print("usage: {} stop   {{ <ray head IP> | job }}".format(argv0))
     print("")
-    print("You can either lauch and stop the model deployment either directly")
+    print("You can lauch and stop the model deployment either directly")
     print("connecting to the cluster providing the IP of the head node, or by")
-    print("submitting a job, in which case you will have to use the \"job\"")
+    print("submitting a job. In this case you will have to use the \"job\"")
     print("in place of the IP of the Ray head")
     print("")
-    print("Example: ray job submit --working-dir . -- python3 {} launch job 1".format(argv0))
-    print("   or  : ./{} launch df-1 1".format(argv0))
+    print("Example: RAY_ADDRESS="http://<head ip>:8265" ray job submit --working-dir . -- python3 {} launch job 1".format(argv0))
+    print("   or  : {} launch <head ip> 1".format(argv0))
     print("")
 
 def ray_init(ray_head_ip):
