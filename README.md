@@ -1,5 +1,5 @@
 # ezmeral-df-with-ray
-Ray on Ezmeral Data Fabric
+Ray on HPE Ezmeral Data Fabric
 
 ## Introduction
 
