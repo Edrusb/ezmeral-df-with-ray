@@ -92,14 +92,13 @@ After a few seconds, the “cluster” tab of the dashboard should display all t
 ### Example 1
 
 To submit a job, we must first activate the python virtual environment (venv) where the _ray-install.py_ script installed Ray
-(this is the path /opt/RAY in we were using above to illustrate the installation script).
-On a node where Ray has been installed (we can also install ray in node that will not be part of the cluster,
-still using _ray-install.py_), open a shell session and type the following:
+(this was the path __/opt/RAY__ we were using above to illustrate the installation script).
+On a node where Ray has been installed (we can also install ray using _ray-install.py_ on a node that will not be part of the cluster (!) and get this way a client node), open a shell session and type the following:
 
 > root@df-1:\~# source /opt/RAY/bin/activate<br>
 > (RAY) root@df-1:\~#
 
-As you see, the prompt has changed reporting now you are under the (RAY) venv. Submitting a job is done the following way (which is displayed in the output shown when starting the head node):
+As you see, the prompt has changed reporting now you are under the (RAY) venv. Submitting a job is done the following way (which is also provided in the output shown above while starting the head node):
 
     RAY_ADDRESS='http://10.13.25.131:8265' ray job submit --working-dir . -- python my_script.py
 
@@ -109,7 +108,7 @@ directory for a working directory on a node of the cluster and copy the __prime.
     root@df-1:~# source /opt/RAY/bin/activate
     (RAY) root@df-1:~# mkdir Working
     (RAY) root@df-1:~# cd Working
-    (RAY) root@df-1:~# cp ....../prime.py .
+    (RAY) root@df-1:~# wget prime.py .
     (RAY) root@df-1:~# export RAY_ADDRESS='http://10.13.25.131:8265'
 
 Then submit the job to the ray cluster:
