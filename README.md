@@ -19,13 +19,13 @@ First we need to install the Ray software on Data Fabric nodes. The __ray-instal
 
 let’s install Ray in /opt/RAY
 
-    ./ray-install.sh /opt/RAY
+    root@df-1:\~# ./ray-install.sh /opt/RAY
 
 For airgap environment, this script relies on the distro package management tools and on python3-pip tool. Both tool must have a repository available in the airgap environment, which is usually the case for the linux package management system. For the python3-pip, the repository must be passed as second argument:
 
-    # ./ray-install.sh
+    root@df-1:\~# ./ray-install.sh
     usage: ./ray-install.sh <installation path> [ <airgap pip repo URL> ]
-    #
+    root@df-1:\~#
 
 ## Deploying a Ray cluster
 
@@ -35,9 +35,9 @@ Once the Ray software is installed on a set of nodes, one of them has to be sele
 
 On the head node run the following:
 
-    ./go-ray.sh /opt/RAY head
+    root@df-1:\~# ./go-ray.sh /opt/RAY head
 
-This will display something like the below output where you will be given the IP address to provide to other nodes to connect to (10.13.25.131 in the following examples):
+This will display something like the below output where you will be given the IP address to provide to other nodes to connect to (df-1 or its IP address 10.13.25.131 in the following examples):
 
     Usage stats collection is disabled.
 
