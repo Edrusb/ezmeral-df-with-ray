@@ -29,7 +29,7 @@ For airgap environment, this script relies on the distro package management tool
 
 ## Deploying a Ray cluster
 
-Once the Ray software is installed on a set of nodes, one of them has to be selected as the _“head node"_. The head node will be then entry point for connecting to the cluster and to submit jobs. The other nodes (pure worker nodes) will be accessible through the _head node_.
+Once the Ray software is installed on a set of nodes, one of them has to be selected as the _“head node"_. The head node will be then entry point for connecting to the cluster, to submit jobs and even to distribute inference request among the many possible instances a model deployment can be sized. The other nodes (pure worker nodes) will be accessible through the _head node_ to process the jobs and workload like inference.
 
 ### Start the head node
 
