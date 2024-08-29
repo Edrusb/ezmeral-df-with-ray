@@ -75,7 +75,7 @@ You should now be able already to connect to the dashboard as described above, i
 
 ### Start all other nodes
 
-On all other nodes run the following command using the IP address of the head node reported previously:
+On all other nodes run the following command using the IP address (or FQDN) of the head node reported previously:
 
     ./go-ray.sh /opt/RAY worker 10.13.25.131
 
