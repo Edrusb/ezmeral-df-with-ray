@@ -11,7 +11,7 @@ You will find below example of use of these two scripts, including the deploymen
 
 ## Installing Ray
 
-First we need to install the Ray software on Data Fabric nodes. The ray-install.sh script should work under the following Linux distributions:
+First we need to install the Ray software on Data Fabric nodes. The __ray-install.sh__ script should work under the following Linux distributions:
 -	Redhat
 -	Rocky linux
 -	Debian
