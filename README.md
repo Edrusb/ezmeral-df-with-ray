@@ -199,17 +199,26 @@ You will have to edit the _translate.py_ script and change the **translation_en_
     class Translator:
         def __init__(self):
             # Load model
-            self.model = pipeline("translation_it_to_jp", model="t5-small")
+            self.model = pipeline("translation_en_to_de", model="t5-small")
 
 also either delete the existing deployed model before re-deploying this modified one:
 
     (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py stop job
  
-or make a copy of this _transate.py_ script to also modify the line
+or make a copy of this _transate.py_ script to also modify the line here replacing "translate" by "translate2" to avoid conflicting with the already deployed model and have more than one model available at a time:
 
-    inf_name = "translate"
+    inf_name = "translate2"
 
-by something else to have two or more models deployed in parallel. To go further using these models and pipelines have a look at the output of this following snippet:
+![Two models in inference](Snapshots/Image4.jpg)
+
+    (RAY) root@df-1:~/Working# ./translate2.py ask df-1 "Success is the ability to go from one failure to another with no loss of enthusiasm."
+
+            Success is the ability to go from one failure to another with no loss of enthusiasm.
+    translates to:
+            Erfolg ist die Fähigkeit, von einem failure zu einem anderen zu gehen ohne Verlust an Ent
+
+
+To go further using these models and pipelines have a look at the output of this following snippet:
 
     from transformers import pipeline
     help(pipeline)
