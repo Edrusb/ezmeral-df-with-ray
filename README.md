@@ -37,7 +37,7 @@ On the head node run the following:
 
     ./go-ray.sh /opt/RAY head
 
-This will output something like the below output where you will be given the IP address to provide to other nodes to connect to:
+This will display something like the below output where you will be given the IP address to provide to other nodes to connect to (10.13.25.131 in the following examples):
 
     Usage stats collection is disabled.
 
