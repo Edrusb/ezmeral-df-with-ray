@@ -144,7 +144,7 @@ Then submit the job to the ray cluster:
 
 ***Note***: This script is just for illustration purposes, it is not efficient to spawn so many small tasks.
 
-### Example 2: LLM
+### Example 2: LLM (no GPU required)
 
 The [__translate.py__](Examples/translate.py) deploys a pre-trained model for inference using **Ray Serve** and let you interact with it to translate English sentences to French. The model used requires the "transformers" and "torch" modules which we have not been installed in the Ray's venv on cluster nodes. We could rely in the _realtime environmenent_ feature or Ray to perform this operartion on-fly but it would last only for the time the model is in inference. As these packages are quite big we will do else.
 
