@@ -7,6 +7,8 @@ Today the HPE Ezmeral Data Fabric does not provide the Ray software in the EEP. 
 -	[ray-install.sh](Source-code/ray-install.sh) (install Ray, obviously)
 -	[go-ray.sh](Source-code/go-ray.sh) (deploys a ray cluster on a set of nodes, including thus the case where nodes are those of a Data Fabric)
 
+You will find below example of use of these two scripts, including the deployment of a pretrained LLM model to translate from English to French. You will see below how to change the source and destination languages ;) no worries!
+
 ## Installing Ray
 
 First we need to install the Ray software on Data Fabric nodes. The ray-install.sh script should work under the following Linux distributions:
