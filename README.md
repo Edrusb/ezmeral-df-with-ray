@@ -21,7 +21,7 @@ let’s install Ray in /opt/RAY
 
     ./ray-install.sh /opt/RAY
 
-For airgap environment, this script replies on the distro package management tools and on python3-pip tool. Both tool must have a repository available in the airgap environment, which is usually the case for the linux package management system. For the python3-pip, the repository must be passed as second argument:
+For airgap environment, this script relies on the distro package management tools and on python3-pip tool. Both tool must have a repository available in the airgap environment, which is usually the case for the linux package management system. For the python3-pip, the repository must be passed as second argument:
 
     # ./ray-install.sh
     usage: ./ray-install.sh <installation path> [ <airgap pip repo URL> ]
