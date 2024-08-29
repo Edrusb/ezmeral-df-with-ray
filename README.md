@@ -108,7 +108,7 @@ directory for a working directory on a node of the cluster and copy the __prime.
     root@df-1:~# source /opt/RAY/bin/activate
     (RAY) root@df-1:~# mkdir Working
     (RAY) root@df-1:~# cd Working
-    (RAY) root@df-1:~# wget prime.py .
+    (RAY) root@df-1:~# wget https://github.com/Edrusb/ezmeral-df-with-ray/blob/main/Examples/prime.py
     (RAY) root@df-1:~# export RAY_ADDRESS='http://10.13.25.131:8265'
 
 Then submit the job to the ray cluster:
@@ -146,9 +146,9 @@ Then submit the job to the ray cluster:
 
 ### Example 2: LLM
 
-The [__translate.py__](Examples/translate.py) put a pre-trained model in inference using **Ray Serve** and let you interact with it to translate English sentences to French. These models requires the "transformers" and "torch" modules which we have not installed in the Ray's venv on cluster nodes. We could rely in the realtime environmenent to perform this operartion on fly and only for the time the model is in inference, but this would be very long as these packages are big and would be required to be downloaded and installed each time.
+The [__translate.py__](Examples/translate.py) deploys a pre-trained model for inference using **Ray Serve** and let you interact with it to translate English sentences to French. The model used requires the "transformers" and "torch" modules which we have not been installed in the Ray's venv on cluster nodes. We could rely in the _realtime environmenent_ feature or Ray to perform this operartion on-fly but it would last only for the time the model is in inference. As these packages are quite big we will do else.
 
-> **Note:** this would be done the following way as we did in the previous example:
+> **Note:** this would be done quite the same way as we did with prime.py above:
 > - copy the __translate.py__ script in an empty directory,
 > - change your current directory to it
 > - activate the Ray venv
