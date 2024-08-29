@@ -188,8 +188,32 @@ Once the script has completed and the model is deployed successfully, you can as
 
     (RAY) root@df-1:~/Working#
 
- here we did not submit a job to Ray but only connected using HTTP the the model to request the translation of the provided message
- 
+ here we did not submit a job to Ray but only connected using HTTP to one of the model instances (we connect to the head node which acts as a load-balancer) to request the translation of the provided message.
 
+ ### How to change the languages?
+Hey! No worries, this is very simple!
+
+You will have to edit the _translate.py_ script and change the **translation_en_to_fr** string to something else like like:
+
+    @serve.deployment(num_replicas=num_instances, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
+    class Translator:
+        def __init__(self):
+            # Load model
+            self.model = pipeline("translation_it_to_jp", model="t5-small")
+
+also either delete the existing deployed model before re-deploying this modified one:
+
+    (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py stop job
+ 
+or make a copy of this _transate.py_ script to also modify the line
+
+    inf_name = "translate"
+
+by something else to have two or more models deployed in parallel. To go further using these models and pipelines have a look at the output of this following snippet:
+
+    from transformers import pipeline
+    help(pipeline)
+
+    
 
 
