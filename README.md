@@ -145,14 +145,20 @@ Then submit the job to the ray cluster:
 
 ### Example 2: LLM
 
-The [__translate.py__](Examples/translate.py) put a pre-trained model in inference using **Ray Serve** and let you interact with it to translate English sentences to French. These models requires the "transformers" and "torch" modules that are not installed by default on the nodes of the cluster. We will rely in the realtime environmenent to perform this operartion on fly and only for the time the model is in inference:
+The [__translate.py__](Examples/translate.py) put a pre-trained model in inference using **Ray Serve** and let you interact with it to translate English sentences to French. These models requires the "transformers" and "torch" modules which we have not installed in the Ray's venv on cluster nodes. We could rely in the realtime environmenent to perform this operartion on fly and only for the time the model is in inference, but this would be very long as these packages are big and would be required to be downloaded and installed each time.
 
-Again copy the __translate.py__ into an empty directory and change your current directory there. A first approach would be to submit a job
-as we did in the previous example, though the __translate.py__ script requiring __torch__ and __transformers__ modules, it would be necessary to use the Ray runtime_environment feature as described below, but that would be painful as it would require to load those big library at each script run:
+> **Note:** this would be done the following way as we did in the previous example:
+> - copy the __translate.py__ script in an empty directory,
+> - change your current directory to it
+> - activate the Ray venv
+> - set the environment variable RAY_ADDRESS to point to the Ray head
+>
+> The only difference would take place when submitting the job, using the **--runtime-env-json** argument:
+>
+>    (RAY) root@df-1:~# ray job submit --working-dir . --runtime-env-json={"pip": [ "torch", "transformers" ] } -- python3 translate.py job launch 5
+>
 
-    (RAY) root@df-1:~# ray job submit --working-dir . --runtime-env-json={"pip": [ "torch", "transformers" ] } -- python3 translate.py launch 5
-
-To avoid this drawback a better approach is to load these two libraries on each of the Ray node, in the venv we created:
+Here we will instead install once and for all those two modules in each Ray venv of the Ray cluster (nodes df-1 to df-5):
 
     clush -b -w df-[1-5] "source /opt/RAY/bin/activate ; python3 -m pip install torch transformers"
 
@@ -161,7 +167,7 @@ then we can submit the job on the head node (df-1) as previously done:
     root@df-1:~# cd Working
     (RAY) root@df-1:\~/Working# cp ....../translate.py .
     (RAY) root@df-1:\~/Working# export RAY_ADDRESS='http://10.13.25.131:8265'
-    (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py launch 5
+    (RAY) root@df-1:\~/Working# ray job submit --working-dir . -- python3 translate.py launch job 5
 
 This will launch **Ray Serve** and "application" with 5 instances to address requests behind port 8000 of the head node. 
 
@@ -171,9 +177,18 @@ You can check the Ray dashboard both the "jobs" and "serve" tabs to see the evol
 
 [ image of dashboard with serve tab]
 
-Once the script has completed and the model is ready for the inference, you can ask for translation using the following command:
+Once the script has completed and the model is deployed successfully, you can ask for translation using the following command:
 
-    python3 predict.py "This is a sentence in English"
+    (RAY) root@df-1:~/Working# ./translate.py ask df-1 "Success is the ability to go from one failure to another with no loss of enthusiasm."
+
+            Success is the ability to go from one failure to another with no loss of enthusiasm.
+    translates to:
+            Le succès est la capacité de passer d'un échec à un autre sans perte d'enthousiasme.
+
+    (RAY) root@df-1:~/Working#
+
+ here we did not submit a job to Ray but only connected using HTTP the the model to request the translation of the provided message
+ 
 
 
 
