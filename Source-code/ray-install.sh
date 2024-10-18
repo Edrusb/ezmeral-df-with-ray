@@ -118,7 +118,7 @@ else
 fi
 
 if ! add_lsb_release ; then
-    echo "lsb_release command needed but could not be found not installed"
+    echo "lsb_release command needed but could not be found nor installed"
     echo "Please provide it/install it to let this script determine"
     echo "the distro type it is run under"
     exit 1
