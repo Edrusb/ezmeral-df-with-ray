@@ -48,7 +48,8 @@ run_head()
 
     ulimit -n 102400
     source "$install_path"/bin/activate
-    ray start --head --dashboard-host 0.0.0.0 --disable-usage-stats
+    ray metrics launch-prometheus
+    ray start --head --metrics-export-port=8080 --dashboard-host 0.0.0.0 --disable-usage-stats
 }
 
 ray_stop()
