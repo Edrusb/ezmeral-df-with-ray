@@ -1,22 +1,4 @@
 #!/usr/bin/env python3
-########################################################################
-# translate.py - a simple script to install Ray on Linux
-# Copyright (C) 2024 Denis Corbin
-#
-#  translate.py is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation, either version 3 of the License, or
-#  (at your option) any later version.
-#
-#  translate.py is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with Webdar.  If not, see <http://www.gnu.org/licenses/>
-#
-########################################################################
 
 import sys
 import ray
@@ -25,17 +7,18 @@ from starlette.requests import Request
 import json
 
 def usage(argv0):
-    print("usage: {} launch {{ <ray head IP> | job }} <instances>".format(argv0))
-    print("usage: {} ask    <ray head IP> <message>".format(argv0))
-    print("usage: {} stop   {{ <ray head IP> | job }}".format(argv0))
     print("")
-    print("You can lauch and stop the model deployment either directly")
+    print("   usage: {} launch {{ gpued | nogpu }} {{ <ray head IP> | job }} <instances>".format(argv0))
+    print("   usage: {} ask    {{ gpued | nogpu }}   <ray head IP>          <message>".format(argv0))
+    print("   usage: {} stop   {{ gpued | nogpu }} {{ <ray head IP> | job }}".format(argv0))
+    print("")
+    print("You can either launch and stop the model deployment either directly")
     print("connecting to the cluster providing the IP of the head node, or by")
-    print("submitting a job. In this case you will have to use the \"job\"")
+    print("submitting a job, in which case you will have to use the \"job\"")
     print("in place of the IP of the Ray head")
     print("")
-    print("Example: RAY_ADDRESS="http://<head ip>:8265" ray job submit --working-dir . -- python3 {} launch job 1".format(argv0))
-    print("   or  : {} launch <head ip> 1".format(argv0))
+    print("Example: ray job submit --working-dir . -- python3 {} launch gpued job 1".format(argv0))
+    print("   or  : ./{} launch df-1 1".format(argv0))
     print("")
 
 def ray_init(ray_head_ip):
@@ -44,17 +27,28 @@ def ray_init(ray_head_ip):
     else:
         ray.init(address="ray://{}:10001".format(ray_head_ip))
 
-def launch(ray_head_ip, num_instances, inf_port, inf_name):
+def launch(ray_head_ip, num_instances, inf_port, inf_name, gpued):
     ray_init(ray_head_ip)
 
     from ray import serve
     from transformers import pipeline
 
-    @serve.deployment(num_replicas=num_instances, ray_actor_options={"num_cpus": 1, "num_gpus": 0})
+    if gpued:
+        numgpu=1/num_instances
+    else:
+        numgpu=0
+
+    @serve.deployment(num_replicas=num_instances, ray_actor_options={"num_cpus": 1, "num_gpus": numgpu})
     class Translator:
         def __init__(self):
             # Load model
-            self.model = pipeline("translation_en_to_fr", model="t5-small")
+#            model="t5-small"
+#            model="t5-base"
+            model="t5-large"
+            if gpued:
+                self.model = pipeline("translation_en_to_fr", model=model, device=0)
+            else:
+                self.model = pipeline("translation_en_to_fr", model=model, device=-1)
 
         def translate(self, text: str) -> str:
             # Run inference
@@ -99,21 +93,49 @@ def stop(ray_head_ip, inf_name):
     ray.shutdown()
 
 
+def inf_name(gpued):
+    if gpued:
+        return "translate_gpued"
+    else:
+        return "translate_nogpu"
+
+
 inf_port = 8000
-inf_name = "translate"
+
+
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4 and sys.argv[1] == "launch":
-        ray_ip = sys.argv[2]
-        num_inst = int(sys.argv[3])
-        launch(ray_ip, num_inst, inf_port, inf_name)
-    elif len(sys.argv) == 4 and sys.argv[1] == "ask":
-        ray_ip = sys.argv[2]
-        message = sys.argv[3]
-        ask(ray_ip, inf_port, inf_name, message)
-    elif len(sys.argv) == 3 and sys.argv[1] == "stop":
-        ray_ip = sys.argv[2]
-        stop(ray_ip, inf_name)
+    numarg = len(sys.argv)
+
+    if numarg < 4:
+        usage(sys.argv[0])
+    else:
+        action = sys.argv[1]
+        gpued = sys.argv[2] == "gpued"
+        head_or_job = sys.argv[3]
+        if numarg == 4:
+            arg = ""
+        elif numarg == 5:
+            arg = sys.argv[4]
+        else:
+            usage(sys.argv[0])
+
+    if action == "launch":
+        if numarg != 5:
+            usage(sys.argv[0])
+        else:
+            num_inst = int(arg)
+            launch(head_or_job, num_inst, inf_port, inf_name(gpued), gpued)
+    elif action == "ask":
+        if numarg != 5:
+            usage(sys.argv[0])
+        else:
+            ask(head_or_job, inf_port, inf_name(gpued), arg)
+    elif action == "stop":
+        if numarg != 4:
+            usage(sys.argv[0])
+        else:
+            stop(head_or_job, inf_name(gpued))
     else:
         usage(sys.argv[0])
 
