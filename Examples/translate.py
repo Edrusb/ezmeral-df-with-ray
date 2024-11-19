@@ -132,6 +132,7 @@ if __name__ == "__main__":
         action = sys.argv[1]
         gpued = sys.argv[2] == "gpued"
         head_or_job = sys.argv[3]
+
         if numarg == 4:
             arg = ""
         elif numarg == 5:
@@ -139,22 +140,21 @@ if __name__ == "__main__":
         else:
             usage(sys.argv[0])
 
-    if action == "launch":
-        if numarg != 5:
-            usage(sys.argv[0])
+        if action == "launch":
+            if numarg != 5:
+                usage(sys.argv[0])
+            else:
+                num_inst = int(arg)
+                launch(head_or_job, num_inst, inf_port, inf_name(gpued), gpued)
+        elif action == "ask":
+            if numarg != 5:
+                usage(sys.argv[0])
+            else:
+                ask(head_or_job, inf_port, inf_name(gpued), arg)
+        elif action == "stop":
+            if numarg != 4:
+                usage(sys.argv[0])
+            else:
+                stop(head_or_job, inf_name(gpued))
         else:
-            num_inst = int(arg)
-            launch(head_or_job, num_inst, inf_port, inf_name(gpued), gpued)
-    elif action == "ask":
-        if numarg != 5:
             usage(sys.argv[0])
-        else:
-            ask(head_or_job, inf_port, inf_name(gpued), arg)
-    elif action == "stop":
-        if numarg != 4:
-            usage(sys.argv[0])
-        else:
-            stop(head_or_job, inf_name(gpued))
-    else:
-        usage(sys.argv[0])
-
