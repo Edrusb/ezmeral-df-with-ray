@@ -40,6 +40,11 @@ def usage(argv0):
     print("   or  : ./{} launch df-1 1".format(argv0))
     print("")
 
+def install_modules():
+    import os
+    os.system("pip install torch transformers")
+
+
 def ray_init(ray_head_ip):
     if ray_head_ip == "job":
         ray.init()
@@ -145,6 +150,7 @@ if __name__ == "__main__":
                 usage(sys.argv[0])
             else:
                 num_inst = int(arg)
+                install_modules()
                 launch(head_or_job, num_inst, inf_port, inf_name(gpued), gpued)
         elif action == "ask":
             if numarg != 5:
